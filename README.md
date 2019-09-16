@@ -36,6 +36,12 @@ composer require --dev sebastiaanluca/laravel-preset
 php artisan preset sebastiaanluca
 ```
 
+or
+
+```bash
+php artisan preset sebastiaanluca/package
+```
+
 ## License
 
 This package operates under the MIT License (MIT). Please see [LICENSE](LICENSE.md) for more information.

@@ -20,5 +20,9 @@ class PresetServiceProvider extends ServiceProvider
         PresetCommand::macro('sebastiaanluca', static function (Command $command) : void {
             Preset::install($command);
         });
+
+        PresetCommand::macro('sebastiaanluca/package', static function (Command $command) : void {
+            PackagePreset::install($command);
+        });
     }
 }

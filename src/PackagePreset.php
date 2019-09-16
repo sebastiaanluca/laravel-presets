@@ -5,7 +5,7 @@ namespace SebastiaanLuca\LaravelPreset;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Console\Presets\Preset as BasePreset;
 
-class Preset extends BasePreset
+class PackagePreset extends BasePreset
 {
     /**
      * @var \Illuminate\Console\Command
@@ -33,6 +33,6 @@ class Preset extends BasePreset
      */
     public function run() : void
     {
-        $this->command->info('Project successfully scaffolded.');
+        $this->command->info('Package successfully scaffolded.');
     }
 }

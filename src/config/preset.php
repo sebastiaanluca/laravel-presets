@@ -2,14 +2,7 @@
 
 return [
 
-    'packages' => [
-
-    ],
-
-    'libraries' => [
-
-        'kintphp/kint',
-
-    ],
+    'project' => require 'project-preset.php',
+    'package' => require 'package-preset.php',
 
 ];
