@@ -1,7 +1,8 @@
 <?php
 
-namespace sixlive\LaravelPreset;
+namespace SebastiaanLuca\LaravelPreset;
 
+use Illuminate\Console\Command;
 use Illuminate\Foundation\Console\PresetCommand;
 use Illuminate\Support\ServiceProvider;
 
@@ -14,9 +15,9 @@ class PresetServiceProvider extends ServiceProvider
      */
     public function boot() : void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/preset.php', 'preset');
+        $this->mergeConfigFrom(__DIR__ . '/config/preset.php', 'preset');
 
-        PresetCommand::macro('sebastiaanluca', static function ($command) : void {
+        PresetCommand::macro('sebastiaanluca', static function (Command $command) : void {
             Preset::install($command);
         });
     }

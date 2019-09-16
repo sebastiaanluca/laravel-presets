@@ -4,12 +4,11 @@ return [
 
     'packages' => [
 
-
     ],
 
-    'libraries'=>[
+    'libraries' => [
 
-        'kintphp/kint'
+        'kintphp/kint',
 
     ],
 
