@@ -27,7 +27,7 @@ Looking for support for earlier versions? Try out any of the previous package ve
 You can install the package via composer:
 
 ```bash
-composer require --dev sixlive/laravel-preset
+composer require --dev sebastiaanluca/laravel-preset
 ```
 
 ## Usage
