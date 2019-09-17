@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         colors="true"
+         verbose="true"
+         processIsolation="false"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         beStrictAboutTestsThatDoNotTestAnything="true"
+         beStrictAboutOutputDuringTests="true"
+         stopOnFailure="false"
+         failOnRisky="true"
+         failOnWarning="true"
+         stopOnError="false"
+>
+    <testsuites>
+        <testsuite name="Browser">
+            <directory suffix="Test.php">./tests/Browser</directory>
+            <directory suffix="Test.php">./modules/*/tests/Browser</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./app</directory>
+        </whitelist>
+    </filter>
+    <listeners>
+        <listener class="NunoMaduro\Collision\Adapters\Phpunit\Listener"/>
+    </listeners>
+    <php>
+        <ini name="memory_limit" value="1G"/>
+        <env name="APP_KEY" value="base64:4UaspG3MBP/xD0xkx52/aOq1ECBImHCS0sZ5lp9jx+4="/>
+        <env name="APP_DEBUG" value="false"/>
+        <env name="APP_ENV" value="testing"/>
+        <env name="CACHE_DRIVER" value="array"/>
+        <env name="SESSION_DRIVER" value="array"/>
+        <env name="QUEUE_CONNECTION" value="sync"/>
+        <env name="MAIL_DRIVER" value="array"/>
+        <env name="SCOUT_DRIVER" value="null"/>
+        <env name="DB_CONNECTION" value="mysql"/>
+        <env name="QUERY_DETECTOR_ENABLED" value="false"/>
+        <env name="DB_DATABASE" value="smartvitaal_test"/>
+        <env name="MY_CLIC_PARTICIPANT_GOOD" value="108741"/>
+        <env name="MY_CLIC_PARTICIPANT_MEDIOCRE" value="108741"/>
+        <env name="MY_CLIC_PARTICIPANT_BAD" value="108741"/>
+        <env name="MY_CLIC_PARTICIPANT_QUESTIONNAIRE" value="108741"/>
+    </php>
+</phpunit>

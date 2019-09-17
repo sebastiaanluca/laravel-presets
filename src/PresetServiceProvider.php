@@ -2,7 +2,6 @@
 
 namespace SebastiaanLuca\LaravelPreset;
 
-use Illuminate\Console\Command;
 use Illuminate\Foundation\Console\PresetCommand;
 use Illuminate\Support\ServiceProvider;
 
@@ -15,13 +14,13 @@ class PresetServiceProvider extends ServiceProvider
      */
     public function boot() : void
     {
-        $this->mergeConfigFrom(__DIR__ . '/config/preset.php', 'preset');
+        $this->mergeConfigFrom(__DIR__ . '/config/preset-sebastiaanluca.php', 'preset-sebastiaanluca');
 
-        PresetCommand::macro('sebastiaanluca', static function (Command $command) : void {
+        PresetCommand::macro('sebastiaanluca', static function (PresetCommand $command) : void {
             Preset::install($command);
         });
 
-        PresetCommand::macro('sebastiaanluca/package', static function (Command $command) : void {
+        PresetCommand::macro('sebastiaanluca/package', static function (PresetCommand $command) : void {
             PackagePreset::install($command);
         });
     }
