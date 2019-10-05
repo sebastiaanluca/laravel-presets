@@ -55,7 +55,7 @@ class Preset extends BasePreset
         // TODO: update app key
 
         $this->command->info('Project successfully scaffolded!');
-        $this->command->comment('Don\'t forget to review your composer.json, .env, README.md.');
+        $this->command->comment('Don\'t forget to review your composer.json, environment variables, and README.');
     }
 
     /**
