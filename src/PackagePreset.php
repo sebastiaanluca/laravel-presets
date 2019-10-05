@@ -1,6 +1,6 @@
 <?php
 
-namespace SebastiaanLuca\LaravelPreset;
+namespace SebastiaanLuca\Preset;
 
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Console\Presets\Preset as BasePreset;

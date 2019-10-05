@@ -27,18 +27,18 @@
     },
     "autoload": {
         "psr-4": {
-            "SebastiaanLuca\\LaravelPreset\\": "src"
+            "SebastiaanLuca\\Preset\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "SebastiaanLuca\\LaravelPreset\\Tests\\": "tests"
+            "SebastiaanLuca\\Preset\\Tests\\": "tests"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "SebastiaanLuca\\LaravelPreset\\PresetServiceProvider"
+                "SebastiaanLuca\\Preset\\PresetServiceProvider"
             ]
         }
     },

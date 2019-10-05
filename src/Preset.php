@@ -1,11 +1,12 @@
 <?php
 
-namespace SebastiaanLuca\LaravelPreset;
+namespace SebastiaanLuca\Preset;
 
 use Closure;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\PresetCommand;
 use Illuminate\Foundation\Console\Presets\Preset as BasePreset;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
 class Preset extends BasePreset
