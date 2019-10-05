@@ -2,6 +2,28 @@
 
 return [
 
+    'files' => [
+
+        '.browserslistrc',
+        '.editorconfig',
+        '.env',
+        '.env.example',
+        '.env.testing',
+        '.gitattributes',
+        '.gitignore',
+        '.shiftrc',
+        'phpcs.xml.dist',
+        'phpunit.dusk.xml',
+        'phpunit.xml.dist',
+        'README.md',
+        'SCRATch.md',
+        'tailwind.config.js',
+        'webpack.mix.js',
+
+        'app/Framework/Models/User.php',
+
+    ],
+
     'composer' => [
 
         'require' => [

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ruleset name="Smart Vitaal coding standard" namespace="smartvitaal/coding-standard">
+<ruleset name="Sebastiaan Luca coding standard" namespace="sebastiaanluca/php-codesniffer-ruleset">
     <arg name="basepath" value="."/>
 
     <file>./app</file>

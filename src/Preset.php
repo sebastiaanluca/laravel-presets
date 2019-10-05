@@ -36,12 +36,13 @@ class Preset extends BasePreset
 
     public function run() : void
     {
-        $this->command->task('Remove obsolete directories and files', Closure::fromCallable([$this, 'deleteObsoleteDirectories']));
-        //        $this->command->task('Move framework to a sub directory', Closure::fromCallable(['static', 'moveFramework']));
+        $this->command->task('Remove obsolete directories and files', Closure::fromCallable([$this, 'deleteObsoleteDirectoriesAndFiles']));
+        $this->command->task('Move framework to a sub directory', Closure::fromCallable(['static', 'moveFramework']));
         $this->command->task('Scaffold application directories', Closure::fromCallable([$this, 'createApplicationDirectories']));
         $this->command->task('Scaffold configuration', Closure::fromCallable([$this, 'scaffoldConfiguration']));
         $this->command->task('Scaffold resources', Closure::fromCallable([$this, 'scaffoldResources']));
         $this->command->task('Scaffold NPM packages', Closure::fromCallable([$this, 'scaffoldNpmPackages']));
+        $this->command->task('Remove preset package', Closure::fromCallable([$this, 'removePresetPackage']));
 
         // TODO: update composer.json with new app class structure
         // TODO: update composer.json with config values
@@ -50,9 +51,11 @@ class Preset extends BasePreset
         // TODO: remove providers from app.php config file
         // TODO: update app namespace in files and bootstrap file
         // TODO: add back User model (in domain code)
+        // TODO: change bash alias new command to use preset repository
+        // TODO: update app key
 
         $this->command->info('Project successfully scaffolded!');
-        $this->command->comment('Don\'t forget to update your composer.json and README.md with your project\'s name and description.');
+        $this->command->comment('Don\'t forget to review your composer.json, .env, README.md.');
     }
 
     /**
@@ -101,7 +104,7 @@ class Preset extends BasePreset
      */
     protected static function addGitKeepFileTo(string $directory) : void
     {
-        (new Filesystem)->copy(__DIR__ . '/../resources/.gitkeep', $directory);
+        (new Filesystem)->copy(__DIR__ . '/../resources/.gitkeep', $directory . '/.gitkeep');
     }
 
     /**
@@ -111,24 +114,30 @@ class Preset extends BasePreset
      */
     protected static function stubPath(string $directory = '') : string
     {
-        return __DIR__ . '../resources/project-stubs/' . $directory;
+        return __DIR__ . '/../resources/project-stubs/' . $directory;
     }
 
     /**
      * @param string $command
      */
-    protected static function call(string $command) : void
+    protected function call(string $command) : void
     {
-        $process = new Process(
-            explode(' ', $command),
-            base_path()
-        );
+        try {
+            $process = new Process(
+                explode(' ', $command),
+                base_path()
+            );
 
-        $process->start();
+            $process->mustRun();
+        } catch (ProcessFailedException $exception) {
+            $this->command->error($exception->getMessage());
+        }
     }
 
-    protected function deleteObsoleteDirectories() : void
+    protected function deleteObsoleteDirectoriesAndFiles() : void
     {
+        static::removeNodeModules();
+
         tap(new Filesystem, static function (Filesystem $filesystem) : void {
             $filesystem->deleteDirectory(base_path('routes'));
             $filesystem->deleteDirectory(public_path('css'));
@@ -136,26 +145,27 @@ class Preset extends BasePreset
             $filesystem->deleteDirectory(resource_path('css'));
             $filesystem->deleteDirectory(resource_path('js'));
             $filesystem->deleteDirectory(resource_path('sass'));
-
-            $filesystem->delete(base_path('.editorconfig'));
-            $filesystem->delete(base_path('.env'));
-            $filesystem->delete(base_path('.env.example'));
-            $filesystem->delete(base_path('.gitattributes'));
-            $filesystem->delete(base_path('.gitignore'));
-            $filesystem->delete(base_path('.styleci.yml'));
-            $filesystem->delete(base_path('phpunit.xml'));
-            $filesystem->delete(base_path('webpack.mix.js'));
-
-            //            $filesystem->delete(base_path('app/Http/Controllers/Controller.php'));
-            //            $filesystem->delete(base_path('app/Providers/AppServiceProvider.php'));
-            //            $filesystem->delete(base_path('app/Providers/AuthServiceProvider.php'));
-            //            $filesystem->delete(base_path('app/Providers/BroadcastServiceProvider.php'));
-            //            $filesystem->delete(base_path('app/Providers/EventServiceProvider.php'));
-            //            $filesystem->delete(base_path('app/Providers/RouteServiceProvider.php'));
-            //            $filesystem->delete(base_path('app/User.php'));
         });
 
-        static::removeNodeModules();
+        tap(new Filesystem, static function (Filesystem $filesystem) : void {
+            $filesystem->delete(base_path('app/Http/Controllers/Controller.php'));
+            $filesystem->delete(base_path('app/Providers/AppServiceProvider.php'));
+            $filesystem->delete(base_path('app/Providers/AuthServiceProvider.php'));
+            $filesystem->delete(base_path('app/Providers/BroadcastServiceProvider.php'));
+            $filesystem->delete(base_path('app/Providers/EventServiceProvider.php'));
+            $filesystem->delete(base_path('app/Providers/RouteServiceProvider.php'));
+
+            $filesystem->delete(base_path('.styleci.yml'));
+            $filesystem->delete(base_path('phpunit.xml'));
+
+            $filesystem->delete(base_path('app/User.php'));
+        });
+
+        tap(new Filesystem, static function (Filesystem $filesystem) : void {
+            foreach (static::config('files') as $file) {
+                $filesystem->delete(base_path($file));
+            }
+        });
     }
 
     protected function moveFramework() : void
@@ -174,21 +184,10 @@ class Preset extends BasePreset
     protected function scaffoldConfiguration() : void
     {
         tap(new Filesystem, static function (Filesystem $filesystem) : void {
-            $filesystem->copy(static::stubPath('.browserslistrc'), base_path('.browserslistrc'));
-            $filesystem->copy(static::stubPath('.editorconfig'), base_path('.editorconfig'));
-            $filesystem->copy(static::stubPath('.env'), base_path('.env'));
-            $filesystem->copy(static::stubPath('.env.example'), base_path('.env.example'));
-            $filesystem->copy(static::stubPath('.env.testing'), base_path('.env.testing'));
-            $filesystem->copy(static::stubPath('.gitattributes'), base_path('.gitattributes'));
-            $filesystem->copy(static::stubPath('.gitignore'), base_path('.gitignore'));
-            $filesystem->copy(static::stubPath('.phpcs.xml.dist'), base_path('.phpcs.xml.dist'));
-            $filesystem->copy(static::stubPath('.phpunit.dusk.xml'), base_path('.phpunit.dusk.xml'));
-            $filesystem->copy(static::stubPath('.phpunit.xml.dist'), base_path('.phpunit.xml.dist'));
-            $filesystem->copy(static::stubPath('.shiftrc'), base_path('.shiftrc'));
-            $filesystem->copy(static::stubPath('README.md'), base_path('README.md'));
-            $filesystem->copy(static::stubPath('SCRATCH.md'), base_path('SCRATCH.md'));
-            $filesystem->copy(static::stubPath('tailwind.config.js'), base_path('tailwind.config.js'));
-            $filesystem->copy(static::stubPath('webpack.mix.js'), base_path('webpack.mix.js'));
+            foreach (static::config('files') as $file) {
+                $filesystem->makeDirectory($filesystem->dirname(base_path($file)), 0755, true, true);
+                $filesystem->copy(static::stubPath($file), base_path($file));
+            }
         });
     }
 
@@ -216,6 +215,12 @@ class Preset extends BasePreset
         static::updatePackages($dev = false);
         static::updatePackages($dev = true);
 
-        static::call('yarn install');
+        $this->call('yarn install');
+    }
+
+    protected function removePresetPackage() : void
+    {
+        // TODO: remove the `--no-scripts` option once scaffolding works
+        $this->call('composer remove sebastiaanluca/laravel-preset --no-scripts');
     }
 }
