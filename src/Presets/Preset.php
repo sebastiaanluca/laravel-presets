@@ -1,11 +1,12 @@
 <?php
 
-namespace SebastiaanLuca\Preset;
+namespace SebastiaanLuca\Preset\Presets;
 
 use Closure;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\PresetCommand;
 use Illuminate\Foundation\Console\Presets\Preset as BasePreset;
+use Illuminate\Support\Arr;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
@@ -37,7 +38,7 @@ class Preset extends BasePreset
     public function run() : void
     {
         $this->command->task('Remove obsolete directories and files', Closure::fromCallable([$this, 'deleteObsoleteDirectoriesAndFiles']));
-        $this->command->task('Move framework to a sub directory', Closure::fromCallable(['static', 'moveFramework']));
+        $this->command->task('Move framework to a sub directory', Closure::fromCallable(['SebastiaanLuca\Preset\Presets\Preset', 'moveFramework']));
         $this->command->task('Scaffold application directories', Closure::fromCallable([$this, 'createApplicationDirectories']));
         $this->command->task('Scaffold configuration', Closure::fromCallable([$this, 'scaffoldConfiguration']));
         $this->command->task('Scaffold resources', Closure::fromCallable([$this, 'scaffoldResources']));
@@ -210,7 +211,33 @@ class Preset extends BasePreset
 
     protected function configureComposer() : void
     {
+        $composerPath = base_path('composer.json');
 
+        if (! file_exists($composerPath)) {
+            $this->command->warn('composer.json not found, skipping configuration.');
+
+            return;
+        }
+
+        $config = json_decode(
+            file_get_contents($composerPath),
+            true,
+            512,
+            JSON_THROW_ON_ERROR | JSON_OBJECT_AS_ARRAY | JSON_UNESCAPED_SLASHES
+        );
+
+        Arr::set($config, 'extra', static::config('composer.extra'));
+        Arr::set($config, 'scripts', static::config('composer.scripts'));
+
+        $config = json_encode(
+            $config,
+            JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT
+        );
+
+        file_put_contents($composerPath, $config . PHP_EOL);
+
+        $this->execute('composer update nothing');
+        $this->execute('composer validate --no-check-all --strict');
     }
 
     protected function addComposerPackages() : void

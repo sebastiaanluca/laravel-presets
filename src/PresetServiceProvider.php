@@ -4,6 +4,8 @@ namespace SebastiaanLuca\Preset;
 
 use Illuminate\Foundation\Console\PresetCommand;
 use Illuminate\Support\ServiceProvider;
+use SebastiaanLuca\Preset\Presets\PackagePreset;
+use SebastiaanLuca\Preset\Presets\Preset;
 
 class PresetServiceProvider extends ServiceProvider
 {
@@ -14,7 +16,7 @@ class PresetServiceProvider extends ServiceProvider
      */
     public function boot() : void
     {
-        $this->mergeConfigFrom(__DIR__ . '/config/preset-sebastiaanluca.php', 'preset-sebastiaanluca');
+        $this->mergeConfigFrom(__DIR__ . '/../config/preset-sebastiaanluca.php', 'preset-sebastiaanluca');
 
         PresetCommand::macro('sebastiaanluca', static function (PresetCommand $command) : void {
             Preset::install($command);

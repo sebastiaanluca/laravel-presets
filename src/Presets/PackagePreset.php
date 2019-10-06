@@ -1,6 +1,6 @@
 <?php
 
-namespace SebastiaanLuca\Preset;
+namespace SebastiaanLuca\Preset\Presets;
 
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Console\Presets\Preset as BasePreset;

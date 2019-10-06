@@ -157,15 +157,9 @@ return [
 
     'config' => [
 
+        // TODO: copy other configuration files
+
         'ide-helper',
-
-    ],
-
-    'post_preset_commands' => [
-
-        'composer run-script composer-validate',
-        'composer run-script optimize',
-        'composer run-script clear',
 
     ],
 
