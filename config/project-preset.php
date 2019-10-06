@@ -1,6 +1,30 @@
 <?php
 
+use SebastiaanLuca\Preset\Actions\AddComposerPackages;
+use SebastiaanLuca\Preset\Actions\AddNpmPackages;
+use SebastiaanLuca\Preset\Actions\CleanUpObsoletes;
+use SebastiaanLuca\Preset\Actions\ConfigureComposer;
+use SebastiaanLuca\Preset\Actions\MoveFramework;
+use SebastiaanLuca\Preset\Actions\RemovePresetPackage;
+use SebastiaanLuca\Preset\Actions\ScaffoldApplication;
+use SebastiaanLuca\Preset\Actions\ScaffoldConfiguration;
+use SebastiaanLuca\Preset\Actions\ScaffoldResources;
+
 return [
+
+    'actions' => [
+
+        'Remove obsolete directories and files' => CleanUpObsoletes::class,
+        'Move framework to a sub directory' => MoveFramework::class,
+        'Scaffold application directories' => ScaffoldApplication::class,
+        'Scaffold configuration' => ScaffoldConfiguration::class,
+        'Scaffold resources' => ScaffoldResources::class,
+        'Configure Composer' => ConfigureComposer::class,
+        'Add Composer packages' => AddComposerPackages::class,
+        'Add NPM packages' => AddNpmPackages::class,
+        'Remove preset package' => RemovePresetPackage::class,
+
+    ],
 
     'files' => [
 
