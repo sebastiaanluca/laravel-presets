@@ -40,9 +40,8 @@ class Preset extends BasePreset
             });
         }
 
-        // TODO: update app namespace in files and bootstrap file
-        // TODO: remove providers from app.php config file
-        // TODO: change bash alias new command to use preset package instead of local repo
+        // TODO: update user model and update reference to users model in config file
+        // TODO: change bash alias new command to use preset package dev-develop instead of local repo
 
         $this->command->info('Project successfully scaffolded!');
         $this->command->comment('Don\'t forget to review your composer.json, .env, and README files.');

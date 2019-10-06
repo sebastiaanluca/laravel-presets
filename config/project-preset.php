@@ -3,6 +3,7 @@
 use SebastiaanLuca\Preset\Actions\AddComposerPackages;
 use SebastiaanLuca\Preset\Actions\AddNpmPackages;
 use SebastiaanLuca\Preset\Actions\CleanUpObsoletes;
+use SebastiaanLuca\Preset\Actions\ConfigureApplication;
 use SebastiaanLuca\Preset\Actions\ConfigureComposer;
 use SebastiaanLuca\Preset\Actions\MoveFramework;
 use SebastiaanLuca\Preset\Actions\RemovePresetPackage;
@@ -19,6 +20,7 @@ return [
         'Scaffold application directories' => ScaffoldApplication::class,
         'Scaffold configuration' => ScaffoldConfiguration::class,
         'Scaffold resources' => ScaffoldResources::class,
+        'Configure application' => ConfigureApplication::class,
         'Configure Composer' => ConfigureComposer::class,
         'Add Composer packages' => AddComposerPackages::class,
         'Add NPM packages' => AddNpmPackages::class,
@@ -88,6 +90,7 @@ return [
             'barryvdh/laravel-ide-helper',
             'beyondcode/laravel-dump-server',
             'dms/phpunit-arraysubset-asserts',
+            'facade/ignition',
             'fzaninotto/faker',
             'itsgoingd/clockwork',
             'kint-php/kint',

@@ -27,7 +27,7 @@ class AddComposerPackages extends Action
             ->join(' ');
 
         $this->call('composer require --no-scripts ' . $packages);
-        $this->call('composer require --no-scripts ' . $devPackages);
+        $this->call('composer require --no-scripts --dev ' . $devPackages);
 
         $this->call('composer dumpautoload');
     }
