@@ -41,18 +41,16 @@ class Preset extends BasePreset
         $this->command->task('Scaffold application directories', Closure::fromCallable([$this, 'createApplicationDirectories']));
         $this->command->task('Scaffold configuration', Closure::fromCallable([$this, 'scaffoldConfiguration']));
         $this->command->task('Scaffold resources', Closure::fromCallable([$this, 'scaffoldResources']));
-        $this->command->task('Scaffold NPM packages', Closure::fromCallable([$this, 'scaffoldNpmPackages']));
+        $this->command->task('Configure Composer', Closure::fromCallable([$this, 'configureComposer']));
+        $this->command->task('Add Composer packages', Closure::fromCallable([$this, 'addComposerPackages']));
+        $this->command->task('Add NPM packages', Closure::fromCallable([$this, 'addNpmPackages']));
         $this->command->task('Remove preset package', Closure::fromCallable([$this, 'removePresetPackage']));
 
         // TODO: update composer.json with new app class structure
         // TODO: update composer.json with config values
-        // TODO: update composer packages
-        // TODO: update npm packages
         // TODO: remove providers from app.php config file
         // TODO: update app namespace in files and bootstrap file
-        // TODO: add back User model (in domain code)
-        // TODO: change bash alias new command to use preset repository
-        // TODO: update app key
+        // TODO: change bash alias new command to use preset package instead of local repo
 
         $this->command->info('Project successfully scaffolded!');
         $this->command->comment('Don\'t forget to review your composer.json, environment variables, and README.');
@@ -120,7 +118,7 @@ class Preset extends BasePreset
     /**
      * @param string $command
      */
-    protected function call(string $command) : void
+    protected function execute(string $command) : void
     {
         try {
             $process = new Process(
@@ -210,17 +208,45 @@ class Preset extends BasePreset
         });
     }
 
-    protected function scaffoldNpmPackages() : void
+    protected function configureComposer() : void
+    {
+
+    }
+
+    protected function addComposerPackages() : void
+    {
+        $packages = collect(static::config('composer.require'))
+            ->map(static function ($value, $key) : string {
+                return is_string($key)
+                    ? $key . '=' . $value
+                    : $value;
+            })
+            ->join(' ');
+
+        $devPackages = collect(static::config('composer.require-dev'))
+            ->map(static function ($value, $key) : string {
+                return is_string($key)
+                    ? $key . '=' . $value
+                    : $value;
+            })
+            ->join(' ');
+
+        $this->execute('composer require --no-scripts ' . $packages);
+        $this->execute('composer require --no-scripts ' . $devPackages);
+
+        $this->execute('composer dumpautoload');
+    }
+
+    protected function addNpmPackages() : void
     {
         static::updatePackages($dev = false);
         static::updatePackages($dev = true);
 
-        $this->call('yarn install');
+        $this->execute('yarn install');
     }
 
     protected function removePresetPackage() : void
     {
-        // TODO: remove the `--no-scripts` option once scaffolding works
-        $this->call('composer remove sebastiaanluca/laravel-preset --no-scripts');
+        $this->execute('composer remove sebastiaanluca/laravel-preset');
     }
 }
