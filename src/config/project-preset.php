@@ -29,8 +29,10 @@ return [
         'require' => [
             'php' => '^7.3',
             'doctrine/dbal',
+            'fideloper/proxy',
             'laravel/horizon',
             'laravel/telescope',
+            'laravel/tinker',
             'nesbot/carbon',
             'nothingworks/blade-svg',
             'predis/predis',
@@ -86,7 +88,16 @@ return [
         ],
 
         'scripts' => [
-            'post-update-cmd' => '@autocomplete',
+            'post-update-cmd' => [
+                '@autocomplete',
+                '@clear',
+            ],
+            'post-autoload-dump' => [
+                'Illuminate\\Foundation\\ComposerScripts::postAutoloadDump',
+                '@php artisan package:discover --ansi',
+                '@autocomplete',
+                '@clear',
+            ],
             'autocomplete' => [
                 '@php artisan ide-helper:generate',
                 '@php artisan ide-helper:meta',
@@ -94,6 +105,7 @@ return [
             'optimize' => [
                 '@php artisan modules:refresh',
                 '@autocomplete',
+                '@clear',
             ],
             'clear' => [
                 '@php artisan cache:clear',
