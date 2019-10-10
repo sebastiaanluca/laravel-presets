@@ -1,14 +1,11 @@
 <?php
 
-use SebastiaanLuca\Preset\Actions\AddComposerPackages;
-use SebastiaanLuca\Preset\Actions\AddNpmPackages;
+declare(strict_types=1);
+
 use SebastiaanLuca\Preset\Actions\CleanUpObsoletes;
-use SebastiaanLuca\Preset\Actions\ConfigureApplication;
 use SebastiaanLuca\Preset\Actions\ConfigureComposer;
 use SebastiaanLuca\Preset\Actions\MoveFramework;
-use SebastiaanLuca\Preset\Actions\RemovePresetPackage;
 use SebastiaanLuca\Preset\Actions\ScaffoldApplication;
-use SebastiaanLuca\Preset\Actions\ScaffoldConfiguration;
 use SebastiaanLuca\Preset\Actions\ScaffoldResources;
 
 return [
@@ -17,14 +14,12 @@ return [
 
         'Remove obsolete directories and files' => CleanUpObsoletes::class,
         'Move framework to a sub directory' => MoveFramework::class,
-        'Scaffold application directories' => ScaffoldApplication::class,
-        'Scaffold configuration' => ScaffoldConfiguration::class,
+        'Scaffold application' => ScaffoldApplication::class,
         'Scaffold resources' => ScaffoldResources::class,
-        'Configure application' => ConfigureApplication::class,
         'Configure Composer' => ConfigureComposer::class,
-        'Add Composer packages' => AddComposerPackages::class,
-        'Add NPM packages' => AddNpmPackages::class,
-        'Remove preset package' => RemovePresetPackage::class,
+        //        'Add Composer packages' => AddComposerPackages::class,
+        //        'Add NPM packages' => AddNpmPackages::class,
+        //        'Remove preset package' => RemovePresetPackage::class,
 
     ],
 
@@ -42,11 +37,14 @@ return [
         'phpunit.dusk.xml',
         'phpunit.xml.dist',
         'README.md',
-        'SCRATch.md',
+        'SCRATCH.md',
         'tailwind.config.js',
         'webpack.mix.js',
 
-        'app/Framework/Models/User.php',
+        'app/Domain',
+        'app/Framework',
+        // 'app/Interfaces',
+        'app/Modules',
 
     ],
 
@@ -115,43 +113,65 @@ return [
         ],
 
         'scripts' => [
-            'post-update-cmd' => [
-                '@autocomplete',
-                '@clear',
-            ],
             'post-autoload-dump' => [
                 'Illuminate\\Foundation\\ComposerScripts::postAutoloadDump',
                 '@php artisan package:discover --ansi',
-                '@autocomplete',
-                '@clear',
+                '@code:autocomplete',
+                '@cache:clear',
             ],
-            'autocomplete' => [
-                '@php artisan ide-helper:generate',
-                '@php artisan ide-helper:meta',
+            'code:autocomplete' => [
+                '@php artisan ide-helper:generate --ansi',
+                '@php artisan ide-helper:meta --ansi',
+                '@php artisan ide-helper:models --nowrite --ansi',
             ],
-            'optimize' => [
-                '@php artisan modules:refresh',
-                '@autocomplete',
-                '@clear',
+            'modules:refresh' => '@php artisan modules:refresh --ansi',
+            'assets:publish' => [
+                '@php artisan vendor:publish --tag=horizon-assets --force --ansi',
+                '@php artisan vendor:publish --tag=telescope-assets --force --ansi',
+                '@cache:clear',
             ],
-            'clear' => [
-                '@php artisan cache:clear',
-                '@php artisan config:clear',
-                '@php artisan route:clear',
-                '@php artisan view:clear',
-                '@php artisan modules:clear',
+            'cache:clear' => [
+                '@php artisan cache:clear --ansi',
+                '@php artisan config:clear --ansi',
+                '@php artisan route:clear --ansi',
+                '@php artisan view:clear --ansi',
+                '@php artisan modules:clear --ansi',
+                '@php artisan morphmap:clear --ansi',
+                '@php artisan autobinding:clear --ansi',
+                '@php artisan telescope:clear --ansi',
+                '@php artisan clockwork:clean --ansi',
+                '@php artisan debugbar:clear --ansi',
             ],
-            'composer-validate' => '@composer validate --no-check-all --strict',
-            'codesniffer-check' => 'vendor/bin/phpcs --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1',
-            'codesniffer-fix' => 'vendor/bin/phpcbf --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 || exit 0',
+            'session:clear' => '@php artisan cache:clear session --ansi',
+            'db:refresh' => '@php artisan migrate:fresh --seed --ansi',
+            'db:seed' => '@php artisan db:seed --class=\"ProductionSeeder\" --ansi',
+            'app:rebuild' => [
+                'composer install --ansi',
+                '@db:refresh --ansi',
+                '@code:autocomplete --ansi',
+                'yarn install',
+                'yarn run dev',
+                '@cache:clear --ansi',
+                '@php artisan search:index',
+            ],
+            'queue:restart' => [
+                '@php artisan horizon:purge --ansi',
+                '@php artisan horizon:terminate --ansi',
+                '@php artisan queue:restart --ansi',
+            ],
+            'queue:clear' => '@php artisan cache:clear horizon --ansi',
+            'lint:check' => 'vendor/bin/phpcs --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1',
+            'lint' => 'vendor/bin/phpcbf --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 || exit 0',
+            'test:composer' => '@composer validate --no-check-all --strict',
+            'test:unit' => 'vendor/bin/phpunit',
             'analyze' => [
-                '@composer-validate',
-                '@codesniffer-check',
+                '@test:composer',
+                '@lint:check',
             ],
-            'test' => 'vendor/bin/phpunit',
-            'check' => [
-                '@analyze',
-                '@test',
+            'test' => [
+                '@test:composer',
+                '@lint:check',
+                '@test:unit',
             ],
         ],
     ],
@@ -183,8 +203,6 @@ return [
     ],
 
     'config' => [
-
-        // TODO: copy other configuration files
 
         'ide-helper',
 

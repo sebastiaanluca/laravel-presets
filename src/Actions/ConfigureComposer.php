@@ -26,7 +26,13 @@ class ConfigureComposer extends Action
             JSON_THROW_ON_ERROR | JSON_OBJECT_AS_ARRAY | JSON_UNESCAPED_SLASHES
         );
 
-        Arr::set($config, 'autoload.psr-4', ['Framework\\' => 'app/Framework/']);
+        Arr::set($config, 'autoload.psr-4', [
+            'Domain\\' => 'app/Domain/',
+            'Framework\\' => 'app/Framework/',
+            'Interfaces\\' => 'app/Interfaces/',
+            'Modules\\' => 'app/Modules/',
+        ]);
+
         Arr::set($config, 'extra', project_config('composer.extra'));
         Arr::set($config, 'scripts', project_config('composer.scripts'));
 

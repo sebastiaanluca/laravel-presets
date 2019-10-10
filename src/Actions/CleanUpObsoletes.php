@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SebastiaanLuca\Preset\Actions;
 
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Str;
 use function SebastiaanLuca\Preset\project_config;
 
 class CleanUpObsoletes extends Action
@@ -35,6 +36,10 @@ class CleanUpObsoletes extends Action
             $filesystem->delete(base_path('app/User.php'));
 
             foreach (project_config('files') as $file) {
+                if (! Str::contains($file, '.')) {
+                    continue;
+                }
+
                 $filesystem->delete(base_path($file));
             }
         });

@@ -40,8 +40,14 @@ class Preset extends BasePreset
             });
         }
 
-        // TODO: update user model and update reference to users model in config file
+        // DONE: update user model and update reference to users model in config file
+        // TODO: move default auth controllers to Auth domain namespace (or provision your own request handlers)
+        // TODO: copy other configuration files
+        // TODO: copy HTTP kernel
+        // TODO: review middleware and remove/replace those you don't need
+        // TODO: provision database migrations and seeders
         // TODO: change bash alias new command to use preset package dev-develop instead of local repo
+        // TODO: add phpstan and phpinsights
 
         $this->command->info('Project successfully scaffolded!');
         $this->command->comment('Don\'t forget to review your composer.json, .env, and README files.');

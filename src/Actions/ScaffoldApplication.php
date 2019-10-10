@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace SebastiaanLuca\Preset\Actions;
 
 use Illuminate\Filesystem\Filesystem;
-use function SebastiaanLuca\Preset\add_gitkeep_to;
+use Illuminate\Support\Str;
+use function SebastiaanLuca\Preset\project_config;
+use function SebastiaanLuca\Preset\project_stub_path;
 
 class ScaffoldApplication extends Action
 {
@@ -13,12 +15,12 @@ class ScaffoldApplication extends Action
     {
         $filesystem = new Filesystem;
 
-        $filesystem->makeDirectory(base_path('app/Domain'), 0755, true);
-        $filesystem->makeDirectory(base_path('app/Interfaces/Web'), 0755, true);
-        $filesystem->makeDirectory(base_path('app/Modules'), 0755, true);
+        foreach (project_config('files') as $file) {
+            $filesystem->makeDirectory($filesystem->dirname(base_path($file)), 0755, true, true);
 
-        add_gitkeep_to(base_path('app/Domain'));
-        add_gitkeep_to(base_path('app/Interfaces/Web'));
-        add_gitkeep_to(base_path('app/Modules'));
+            ! Str::contains($file, '.')
+                ? $filesystem->copyDirectory(project_stub_path($file), base_path($file))
+                : $filesystem->copy(project_stub_path($file), base_path($file));
+        }
     }
 }
