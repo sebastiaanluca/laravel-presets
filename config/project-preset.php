@@ -43,7 +43,7 @@ return [
 
         'app/Domain',
         'app/Framework',
-        // 'app/Interfaces',
+        'app/Interfaces',
         'app/Modules',
 
     ],

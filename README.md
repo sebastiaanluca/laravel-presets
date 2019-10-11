@@ -42,6 +42,12 @@ or
 php artisan preset sebastiaanluca/package
 ```
 
+## Notes
+
+### Redis
+
+Install https://github.com/phpredis/phpredis via PECL and update your .env file (`REDIS_CLIENT=phpredis`) for a 6x speed boost when using Redis.
+
 ## License
 
 This package operates under the MIT License (MIT). Please see [LICENSE](LICENSE.md) for more information.

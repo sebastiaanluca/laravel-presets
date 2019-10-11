@@ -12,7 +12,7 @@ abstract class BaseModel extends Model
 {
     use PreventsLazyLoading;
     use RoutesWithFakeIds;
-    use HasBooleanDates
+    use HasBooleanDates;
 
     /**
      * The attributes that should be cast to native types.
