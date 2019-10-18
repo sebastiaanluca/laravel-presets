@@ -154,12 +154,12 @@ return [
                 '@cache:clear --ansi',
                 '@php artisan search:index',
             ],
+            'queue:clear' => '@php artisan cache:clear queue --ansi',
             'queue:restart' => [
                 '@php artisan horizon:purge --ansi',
                 '@php artisan horizon:terminate --ansi',
                 '@php artisan queue:restart --ansi',
             ],
-            'queue:clear' => '@php artisan cache:clear horizon --ansi',
             'lint:check' => 'vendor/bin/phpcs --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1',
             'lint' => 'vendor/bin/phpcbf --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 || exit 0',
             'test:composer' => '@composer validate --no-check-all --strict',

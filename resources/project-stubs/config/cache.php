@@ -42,7 +42,7 @@ return [
             'connection' => 'session',
         ],
 
-        'horizon' => [
+        'queue' => [
             'driver' => 'redis',
             'connection' => 'queue',
         ],
