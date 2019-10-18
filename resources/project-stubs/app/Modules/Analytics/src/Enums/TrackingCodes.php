@@ -13,5 +13,5 @@ class TrackingCodes
     /**
      * @var string
      */
-    public const DISCOUNT_CODE_USED = 'discount_codes.used';
+    public const EXAMPLE = 'example';
 }

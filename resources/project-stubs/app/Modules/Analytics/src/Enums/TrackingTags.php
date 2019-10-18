@@ -13,15 +13,5 @@ class TrackingTags
     /**
      * @var string
      */
-    public const SCORES = 'scores';
-
-    /**
-     * @var string
-     */
-    public const VISITS = 'visits';
-
-    /**
-     * @var string
-     */
-    public const SHOP = 'shop';
+    public const EXAMPLE = 'example';
 }
