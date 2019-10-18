@@ -6,6 +6,7 @@ namespace SebastiaanLuca\Preset\Actions;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
+use function SebastiaanLuca\Preset\handle_filesystem_errors;
 use function SebastiaanLuca\Preset\project_config;
 
 class CleanUpObsoletes extends Action
@@ -13,34 +14,34 @@ class CleanUpObsoletes extends Action
     public function execute() : void
     {
         tap(new Filesystem, static function (Filesystem $filesystem) : void {
-            $filesystem->deleteDirectory(base_path('node_modules'));
-            $filesystem->delete(base_path('yarn.lock'));
+            handle_filesystem_errors($filesystem->deleteDirectory(base_path('node_modules')));
+            handle_filesystem_errors($filesystem->delete(base_path('yarn.lock')));
 
-            $filesystem->deleteDirectory(base_path('routes'));
-            $filesystem->deleteDirectory(public_path('css'));
-            $filesystem->deleteDirectory(public_path('js'));
-            $filesystem->deleteDirectory(resource_path('css'));
-            $filesystem->deleteDirectory(resource_path('js'));
-            $filesystem->deleteDirectory(resource_path('sass'));
+            handle_filesystem_errors($filesystem->deleteDirectory(base_path('routes')));
+            handle_filesystem_errors($filesystem->deleteDirectory(public_path('css')));
+            handle_filesystem_errors($filesystem->deleteDirectory(public_path('js')));
+            handle_filesystem_errors($filesystem->deleteDirectory(resource_path('css')));
+            handle_filesystem_errors($filesystem->deleteDirectory(resource_path('js')));
+            handle_filesystem_errors($filesystem->deleteDirectory(resource_path('sass')));
 
-            $filesystem->delete(base_path('app/Http/Controllers/Controller.php'));
-            $filesystem->delete(base_path('app/Providers/AppServiceProvider.php'));
-            $filesystem->delete(base_path('app/Providers/AuthServiceProvider.php'));
-            $filesystem->delete(base_path('app/Providers/BroadcastServiceProvider.php'));
-            $filesystem->delete(base_path('app/Providers/EventServiceProvider.php'));
-            $filesystem->delete(base_path('app/Providers/RouteServiceProvider.php'));
+            handle_filesystem_errors($filesystem->delete(base_path('app/Http/Controllers/Controller.php')));
+            handle_filesystem_errors($filesystem->delete(base_path('app/Providers/AppServiceProvider.php')));
+            handle_filesystem_errors($filesystem->delete(base_path('app/Providers/AuthServiceProvider.php')));
+            handle_filesystem_errors($filesystem->delete(base_path('app/Providers/BroadcastServiceProvider.php')));
+            handle_filesystem_errors($filesystem->delete(base_path('app/Providers/EventServiceProvider.php')));
+            handle_filesystem_errors($filesystem->delete(base_path('app/Providers/RouteServiceProvider.php')));
 
-            $filesystem->delete(base_path('.styleci.yml'));
-            $filesystem->delete(base_path('phpunit.xml'));
+            handle_filesystem_errors($filesystem->delete(base_path('.styleci.yml')));
+            handle_filesystem_errors($filesystem->delete(base_path('phpunit.xml')));
 
-            $filesystem->delete(base_path('app/User.php'));
+            handle_filesystem_errors($filesystem->delete(base_path('app/User.php')));
 
             foreach (project_config('files') as $file) {
                 if (! Str::contains($file, '.')) {
                     continue;
                 }
 
-                $filesystem->delete(base_path($file));
+                handle_filesystem_errors($filesystem->delete(base_path($file)));
             }
         });
     }

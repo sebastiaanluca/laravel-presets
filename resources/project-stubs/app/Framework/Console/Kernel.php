@@ -8,9 +8,11 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Laravel\Horizon\Console\SnapshotCommand as SnapshotHorizon;
 use Laravel\Telescope\Console\PruneCommand as PruneTelescopeEntries;
+use Spatie\Activitylog\CleanActivitylogCommand as CleanActivitylog;
 use Spatie\Backup\Commands\BackupCommand as BackUp;
 use Spatie\Backup\Commands\CleanupCommand as CleanBackups;
 use Spatie\Backup\Commands\MonitorCommand as MonitorBackups;
+use Spatie\PersonalDataExport\Commands\CleanOldPersonalDataExportsCommand as CleanOldPersonalDataExports;
 
 class Kernel extends ConsoleKernel
 {
@@ -46,6 +48,8 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command(SnapshotHorizon::class)->everyFiveMinutes();
         $schedule->command(PruneTelescopeEntries::class, ['--hours' => 168])->daily();
+        $schedule->command(CleanOldPersonalDataExports::class)->daily();
+        $schedule->command(CleanActivitylog::class)->weekly();
     }
 
     /**

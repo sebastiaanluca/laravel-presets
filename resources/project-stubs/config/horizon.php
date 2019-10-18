@@ -7,7 +7,7 @@ return [
 
     'domain' => null,
 
-    'path' => 'queue',
+    'path' => 'internal/horizon',
 
     'use' => 'queue',
 

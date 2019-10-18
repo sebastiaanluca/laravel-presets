@@ -5,7 +5,6 @@ declare(strict_types=1);
 use SebastiaanLuca\Preset\Actions\CleanUpObsoletes;
 use SebastiaanLuca\Preset\Actions\ConfigureComposer;
 use SebastiaanLuca\Preset\Actions\MoveFramework;
-use SebastiaanLuca\Preset\Actions\ScaffoldApplication;
 use SebastiaanLuca\Preset\Actions\ScaffoldResources;
 
 return [
@@ -14,37 +13,12 @@ return [
 
         'Remove obsolete directories and files' => CleanUpObsoletes::class,
         'Move framework to a sub directory' => MoveFramework::class,
-        'Scaffold application' => ScaffoldApplication::class,
-        'Scaffold resources' => ScaffoldResources::class,
+        'Scaffold application' => ScaffoldResources::class,
         'Configure Composer' => ConfigureComposer::class,
         //        'Add Composer packages' => AddComposerPackages::class,
         //        'Add NPM packages' => AddNpmPackages::class,
+        //        'Configure application' => ConfigureApplication::class,
         //        'Remove preset package' => RemovePresetPackage::class,
-
-    ],
-
-    'files' => [
-
-        '.browserslistrc',
-        '.editorconfig',
-        '.env',
-        '.env.example',
-        '.env.testing',
-        '.gitattributes',
-        '.gitignore',
-        '.shiftrc',
-        'phpcs.xml.dist',
-        'phpunit.dusk.xml',
-        'phpunit.xml.dist',
-        'README.md',
-        'SCRATCH.md',
-        'tailwind.config.js',
-        'webpack.mix.js',
-
-        'app/Domain',
-        'app/Framework',
-        'app/Interfaces',
-        'app/Modules',
 
     ],
 
@@ -72,6 +46,7 @@ return [
             'sebastiaanluca/php-pipe-operator',
             'sentry/sentry-laravel',
             'spatie/data-transfer-object',
+            'spatie/laravel-activitylog',
             'spatie/laravel-backup',
             'spatie/laravel-blade-x',
             'spatie/laravel-html',
@@ -79,6 +54,7 @@ return [
             'spatie/laravel-personal-data-export',
             'spatie/laravel-view-models',
             'spatie/once',
+            'staudenmeir/eloquent-eager-limit',
             'staudenmeir/eloquent-has-many-deep',
             'webmozart/assert',
         ],
@@ -199,12 +175,6 @@ return [
             'postcss-nested' => '^4.1',
             'postcss-preset-env' => '^6.7',
         ],
-
-    ],
-
-    'config' => [
-
-        'ide-helper',
 
     ],
 

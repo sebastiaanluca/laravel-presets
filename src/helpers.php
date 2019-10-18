@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SebastiaanLuca\Preset;
 
 use Illuminate\Filesystem\Filesystem;
+use RuntimeException;
 
 /**
  * @param string|null $key
@@ -46,8 +47,26 @@ function package_config(?string $key = null) : array
 
 /**
  * @param string $path
+ *
+ * @throws \RuntimeException
  */
 function add_gitkeep_to(string $path) : void
 {
-    (new Filesystem)->copy(__DIR__ . '/../resources/.gitkeep', $path . '/.gitkeep');
+    handle_filesystem_errors(
+        (new Filesystem)->copy(__DIR__ . '/../resources/.gitkeep', $path . '/.gitkeep')
+    );
+}
+
+/**
+ * @param bool $result
+ *
+ * @throws \RuntimeException
+ */
+function handle_filesystem_errors(bool $result) : void
+{
+    if ($result === true) {
+        return;
+    }
+
+    throw new RuntimeException('Unable to perform operation.');
 }

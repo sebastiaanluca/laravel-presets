@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SebastiaanLuca\Preset\Actions;
 
 use Illuminate\Filesystem\Filesystem;
+use function SebastiaanLuca\Preset\handle_filesystem_errors;
 
 class MoveFramework extends Action
 {
@@ -18,13 +19,13 @@ class MoveFramework extends Action
     {
         $filesystem = new Filesystem;
 
-        $filesystem->moveDirectory(base_path('app'), base_path('_app'));
+        handle_filesystem_errors($filesystem->moveDirectory(base_path('app'), base_path('_app')));
 
         if (! $filesystem->isDirectory($directory = base_path('app'))) {
-            $filesystem->makeDirectory($directory, 0755, true);
+            handle_filesystem_errors($filesystem->makeDirectory($directory, 0755, true));
         }
 
-        $filesystem->moveDirectory(base_path('_app'), base_path('app/Framework'));
+        handle_filesystem_errors($filesystem->moveDirectory(base_path('_app'), base_path('app/Framework')));
     }
 
     protected function update() : void
@@ -39,9 +40,11 @@ class MoveFramework extends Action
 
         foreach ($paths as $path) {
             foreach ($filesystem->allFiles(base_path($path)) as $file) {
-                $filesystem->put(
-                    $file->getPathname(),
-                    str_replace('App\\', 'Framework\\', $file->getContents())
+                handle_filesystem_errors(
+                    (bool) $filesystem->put(
+                        $file->getPathname(),
+                        str_replace('App\\', 'Framework\\', $file->getContents())
+                    )
                 );
             }
         }
