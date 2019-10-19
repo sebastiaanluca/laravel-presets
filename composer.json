@@ -1,12 +1,14 @@
 {
-    "name": "sebastiaanluca/laravel-preset",
+    "name": "sebastiaanluca/laravel-presets",
     "description": "Various plug-and-play presets to scaffold your existing project.",
     "type": "library",
     "keywords": [
         "laravel",
-        "preset"
+        "presets",
+        "scaffold",
+        "setup"
     ],
-    "homepage": "https://github.com/sebastiaanluca/laravel-preset",
+    "homepage": "https://github.com/sebastiaanluca/laravel-presets",
     "license": "MIT",
     "authors": [
         {
