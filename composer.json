@@ -1,6 +1,6 @@
 {
     "name": "sebastiaanluca/laravel-preset",
-    "description": "An opinionated Laravel application preset",
+    "description": "Various plug-and-play presets to scaffold your existing project.",
     "type": "library",
     "keywords": [
         "laravel",
