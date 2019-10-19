@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SebastiaanLuca\Preset;
+namespace SebastiaanLuca\Preset\Concerns;
 
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;

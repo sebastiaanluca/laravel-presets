@@ -42,7 +42,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "SebastiaanLuca\\Preset\\PresetServiceProvider"
+                "SebastiaanLuca\\Preset\\Providers\\PresetServiceProvider"
             ]
         }
     },
