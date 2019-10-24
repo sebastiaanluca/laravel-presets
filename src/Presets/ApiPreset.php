@@ -32,9 +32,9 @@ class ApiPreset extends Preset
         $this->command->task('Add generated OAuth keys', Closure::fromCallable([$this, 'generateAndWriteOauthKeys']));
 
         $this->command->info('🎉 API successfully scaffolded!');
-        $this->command->info('➡️ After reviewing the changes, run `php artisan migrate` to commit them to your database.');
+        $this->command->info('➡️  After you\'ve reviewed the changes, run `php artisan migrate` to persist them in your database.');
         $this->command->comment('Based on your requirements, you can add a migration to create your one-time personal OAuth clients or opt to let your users create these manually themselves in your app.');
-        $this->command->comment('See https://laravel.com/docs/passport for more information on how to configure other parts of your API.');
+        $this->command->comment('See https://laravel.com/docs/passport for more information on how to further configure your API.');
     }
 
     protected function addPackage() : void
@@ -90,12 +90,12 @@ class ApiPreset extends Preset
         $config = $filesystem->get($path);
 
         $find = <<<TEXT
-                Interface\Console\Providers\ConsoleServiceProvider::class,
+                Interfaces\Console\Providers\ConsoleServiceProvider::class,
         TEXT;
 
         $replace = <<<TEXT
                 Interfaces\Api\Providers\ApiServiceProvider::class,
-                Interface\Console\Providers\ConsoleServiceProvider::class,
+                Interfaces\Console\Providers\ConsoleServiceProvider::class,
         TEXT;
 
         $config = str_replace($find, $replace, $config);
@@ -181,10 +181,12 @@ class ApiPreset extends Preset
         TEXT;
 
         $searchWebMiddleware = <<<TEXT
+                    VerifyCsrfToken::class,
                     SubstituteBindings::class,
         TEXT;
 
         $replaceWebMiddleware = <<<TEXT
+                    VerifyCsrfToken::class,
                     SubstituteBindings::class,
                     CreateFreshApiToken::class,
         TEXT;
@@ -210,10 +212,12 @@ class ApiPreset extends Preset
         TEXT;
 
         $searchMiddlewarePriority2 = <<<TEXT
+                ForceJsonRequests::class,
                 SubstituteBindings::class,
         TEXT;
 
         $replaceMiddlewarePriority2 = <<<TEXT
+                ForceJsonRequests::class,
                 SubstituteBindings::class,
                 CreateFreshApiToken::class,
         TEXT;
@@ -234,6 +238,7 @@ class ApiPreset extends Preset
     protected function addEnvironmentVariables() : void
     {
         $string = <<<TEXT
+        
         PASSPORT_PRIVATE_KEY=
         PASSPORT_PUBLIC_KEY=
         
@@ -251,12 +256,12 @@ class ApiPreset extends Preset
 
     protected function generateAndWriteOauthKeys() : void
     {
-        $this->command->call(GenerateOauthKeys::class, [
+        $this->command->callSilent(GenerateOauthKeys::class, [
             '--write' => true,
             '--file' => '.env',
         ]);
 
-        $this->command->call(GenerateOauthKeys::class, [
+        $this->command->callSilent(GenerateOauthKeys::class, [
             '--write' => true,
             '--file' => '.env.testing',
         ]);
