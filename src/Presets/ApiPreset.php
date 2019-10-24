@@ -2,8 +2,10 @@
 
 namespace SebastiaanLuca\Preset\Presets;
 
+use Closure;
 use Illuminate\Filesystem\Filesystem;
-use Modules\Auth\Middleware\AuthenticateOnceWithBasicAuth;
+use Illuminate\Support\Str;
+use SebastiaanLuca\Preset\Commands\GenerateOauthKeys;
 use function SebastiaanLuca\Preset\handle_filesystem_errors;
 
 class ApiPreset extends Preset
@@ -15,41 +17,44 @@ class ApiPreset extends Preset
      */
     public function run() : void
     {
-        // DONE: composer require laravel/passport
-        // DONE: Copy custom migrations (UUID, current date and time)
-        // DONE: Add and copy migration to create OAuth clients
-        //  Default (authorization grant via auth approval screen): php artisan passport:client
-        //  Password grant (for first-party clients with users): php artisan passport:client --password
-        //  Client credentials grant (for machine-to-machine authentication): php artisan passport:client --client
-        //  Personal access tokens (let users issue tokens to themselves): php artisan passport:client --personal
-        //  Just create and let artisan output their keys (you want different keys per environment)
-        // DONE: php artisan vendor:publish --tag=passport-views
-        // DONE: Copy API interface directory to src/Interfaces
-        // TODO: Add and copy API tests directory to tests/Interfaces/Api
-        // DONE: Register API service provider in app config
-        // DONE: Change auth API driver to use `passport`
-        // DONE: Add HasApiTokens trait to user model
-        // DONE: Add the various middleware to the api middleware in the HTTP kernel and set its priority
-        // TODO: Add a command to generate oauth keys in /tmp and output them as strings for use in the .env file (add command to Cli interface) (or immediately write to .env file if not yet there, or with --force)
-        // TODO: When setting up via the preset, automatically add the generated string (both keys) to the .env file (using the command's --write option)
-        // DONE: Ask the user to run `php artisan migrate` after reviewing the created files
-        // DONE: Ask user to check the ApiRouter to enable whatever grants they want to want to use
+        // TODO: Write and copy API tests directory to tests/Interfaces/Api
 
-        $this->call('composer require laravel/passport');
-        $this->call('php artisan vendor:publish --tag=passport-views');
-
-        $this->copyConfiguration();
-        $this->copyMigrations();
-        $this->copyInterface();
-        $this->registerProvider();
-        $this->registerAuthGuard();
-        $this->registerUserTrait();
-        $this->registerKernelMiddlewares();
+        $this->command->task('Add laravel/passport', Closure::fromCallable([$this, 'addPackage']));
+        $this->command->task('Publish laravel/passport views', Closure::fromCallable([$this, 'publishViews']));
+        $this->command->task('Scaffold configuration', Closure::fromCallable([$this, 'copyConfiguration']));
+        $this->command->task('Scaffold migrations', Closure::fromCallable([$this, 'copyMigrations']));
+        $this->command->task('Scaffold HTTP interface', Closure::fromCallable([$this, 'copyInterface']));
+        $this->command->task('Register HTTP interface provider', Closure::fromCallable([$this, 'registerProvider']));
+        $this->command->task('Register auth guard', Closure::fromCallable([$this, 'registerAuthGuard']));
+        $this->command->task('Register user tokens trait', Closure::fromCallable([$this, 'registerUserTrait']));
+        $this->command->task('Register kernel middleware', Closure::fromCallable([$this, 'registerKernelMiddlewares']));
+        $this->command->task('Add environment variables', Closure::fromCallable([$this, 'addEnvironmentVariables']));
+        $this->command->task('Add generated OAuth keys', Closure::fromCallable([$this, 'generateAndWriteOauthKeys']));
 
         $this->command->info('🎉 API successfully scaffolded!');
-        $this->command->info('➡️ After reviewing the changes, run `php artisan migrate` to commit these to your database.');
-        $this->command->comment('Based on your requirements, you can add a migration to create your one-time personal OAuth clients or opt to let your users create these manually themselves.');
-        $this->command->comment('See https://laravel.com/docs/passport for more information.');
+        $this->command->info('➡️ After reviewing the changes, run `php artisan migrate` to commit them to your database.');
+        $this->command->comment('Based on your requirements, you can add a migration to create your one-time personal OAuth clients or opt to let your users create these manually themselves in your app.');
+        $this->command->comment('See https://laravel.com/docs/passport for more information on how to configure other parts of your API.');
+    }
+
+    protected function addPackage() : void
+    {
+        $this->call('composer require laravel/passport');
+    }
+
+    protected function publishViews() : void
+    {
+        $this->call('php artisan vendor:publish --tag=passport-views');
+    }
+
+    protected function copyConfiguration() : void
+    {
+        handle_filesystem_errors(
+            (new Filesystem)->copy(
+                __DIR__ . '/../../resources/api/config/passport.php',
+                config_path('passport.php')
+            )
+        );
     }
 
     protected function copyMigrations() : void
@@ -64,16 +69,6 @@ class ApiPreset extends Preset
                 )
             );
         }
-    }
-
-    protected function copyConfiguration() : void
-    {
-        handle_filesystem_errors(
-            (new Filesystem)->copy(
-                __DIR__ . '/../../resources/api/config/passport.php',
-                config_path('passport.php')
-            )
-        );
     }
 
     protected function copyInterface() : void
@@ -234,6 +229,36 @@ class ApiPreset extends Preset
         $config = $this->replace($replacements, $config);
 
         $filesystem->put($path, $config);
+    }
+
+    protected function addEnvironmentVariables() : void
+    {
+        $string = <<<TEXT
+        PASSPORT_PRIVATE_KEY=
+        PASSPORT_PUBLIC_KEY=
+        TEXT;
+
+        $filesystem = new Filesystem;
+
+        $file = base_path('.env.example');
+        $contents = $filesystem->get($file);
+
+        if (! Str::contains($contents, $string)) {
+            $filesystem->put($file, $contents . PHP_EOL . PHP_EOL . $string);
+        }
+    }
+
+    protected function generateAndWriteOauthKeys() : void
+    {
+        $this->command->call(GenerateOauthKeys::class, [
+            '--write',
+            '--file=.env',
+        ]);
+
+        $this->command->call(GenerateOauthKeys::class, [
+            '--write',
+            '--file=.env.testing',
+        ]);
     }
 
     /**
