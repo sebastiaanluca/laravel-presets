@@ -37,13 +37,11 @@ class GenerateOauthKeys extends Command
     {
         $keys = $rsa->createKey(4096);
 
-        $string = <<<TEXT
-        
+        $string = PHP_EOL . <<<TEXT
         PASSPORT_PRIVATE_KEY="{$keys['privatekey']}"
         
         PASSPORT_PUBLIC_KEY="{$keys['publickey']}"
-        
-        TEXT;
+        TEXT . PHP_EOL;
 
         if ($this->option('write') === true) {
             $destination = $this->option('file') ?? '.env';
