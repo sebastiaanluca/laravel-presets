@@ -19,7 +19,7 @@ class ApiPreset extends Preset
     {
         // TODO: Write and copy API tests directory to tests/Interfaces/Api
 
-        $this->command->task('Add laravel/passport', Closure::fromCallable([$this, 'addPackage']));
+        $this->command->task('Add laravel/passport package', Closure::fromCallable([$this, 'addPackage']));
         $this->command->task('Publish laravel/passport views', Closure::fromCallable([$this, 'publishViews']));
         $this->command->task('Scaffold configuration', Closure::fromCallable([$this, 'copyConfiguration']));
         $this->command->task('Scaffold migrations', Closure::fromCallable([$this, 'copyMigrations']));
@@ -90,12 +90,12 @@ class ApiPreset extends Preset
         $config = $filesystem->get($path);
 
         $find = <<<TEXT
-                Interfaces\Cli\Providers\CliServiceProvider::class,
+                Interface\Console\Providers\ConsoleServiceProvider::class,
         TEXT;
 
         $replace = <<<TEXT
                 Interfaces\Api\Providers\ApiServiceProvider::class,
-                Interfaces\Cli\Providers\CliServiceProvider::class,
+                Interface\Console\Providers\ConsoleServiceProvider::class,
         TEXT;
 
         $config = str_replace($find, $replace, $config);
@@ -251,13 +251,13 @@ class ApiPreset extends Preset
     protected function generateAndWriteOauthKeys() : void
     {
         $this->command->call(GenerateOauthKeys::class, [
-            '--write',
-            '--file=.env',
+            'write' => '',
+            'file' => '.env',
         ]);
 
         $this->command->call(GenerateOauthKeys::class, [
-            '--write',
-            '--file=.env.testing',
+            'write' => '',
+            'file' => '.env',
         ]);
     }
 
