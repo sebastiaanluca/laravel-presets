@@ -4,6 +4,7 @@ namespace SebastiaanLuca\Preset\Providers;
 
 use Illuminate\Foundation\Console\PresetCommand;
 use Illuminate\Support\ServiceProvider;
+use SebastiaanLuca\Preset\Presets\ApiPreset;
 use SebastiaanLuca\Preset\Presets\AuthPreset;
 
 class PresetServiceProvider extends ServiceProvider
@@ -12,6 +13,7 @@ class PresetServiceProvider extends ServiceProvider
      * @var array
      */
     private $presets = [
+        'sebastiaanluca:api' => ApiPreset::class,
         'sebastiaanluca:auth' => AuthPreset::class,
     ];
 
