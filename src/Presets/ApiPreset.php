@@ -19,8 +19,8 @@ class ApiPreset extends Preset
     {
         // TODO: Write and copy API tests directory to tests/Interfaces/Api
 
-        $this->command->task('Add laravel/passport package', Closure::fromCallable([$this, 'addPackage']));
-        $this->command->task('Publish laravel/passport views', Closure::fromCallable([$this, 'publishViews']));
+        $this->command->task('Add Laravel Passport package', Closure::fromCallable([$this, 'addPackage']));
+        $this->command->task('Publish Laravel Passport views', Closure::fromCallable([$this, 'publishViews']));
         $this->command->task('Scaffold configuration', Closure::fromCallable([$this, 'copyConfiguration']));
         $this->command->task('Scaffold migrations', Closure::fromCallable([$this, 'copyMigrations']));
         $this->command->task('Scaffold HTTP interface', Closure::fromCallable([$this, 'copyInterface']));
@@ -236,6 +236,7 @@ class ApiPreset extends Preset
         $string = <<<TEXT
         PASSPORT_PRIVATE_KEY=
         PASSPORT_PUBLIC_KEY=
+        
         TEXT;
 
         $filesystem = new Filesystem;
@@ -244,20 +245,20 @@ class ApiPreset extends Preset
         $contents = $filesystem->get($file);
 
         if (! Str::contains($contents, $string)) {
-            $filesystem->put($file, $contents . PHP_EOL . PHP_EOL . $string);
+            $filesystem->put($file, $contents . $string);
         }
     }
 
     protected function generateAndWriteOauthKeys() : void
     {
         $this->command->call(GenerateOauthKeys::class, [
-            'write' => '',
-            'file' => '.env',
+            '--write' => true,
+            '--file' => '.env',
         ]);
 
         $this->command->call(GenerateOauthKeys::class, [
-            'write' => '',
-            'file' => '.env',
+            '--write' => true,
+            '--file' => '.env.testing',
         ]);
     }
 
