@@ -27,26 +27,15 @@ Looking for support for earlier versions? Try out any of the previous package ve
 You can install the package via composer:
 
 ```bash
-composer require --dev sebastiaanluca/laravel-preset
+composer require --dev sebastiaanluca/laravel-presets
 ```
 
 ## Usage
 
 ```bash
-php artisan preset sebastiaanluca
+php artisan preset sebastiaanluca:api
+php artisan preset sebastiaanluca:auth
 ```
-
-or
-
-```bash
-php artisan preset sebastiaanluca/package
-```
-
-## Notes
-
-### Redis
-
-Install https://github.com/phpredis/phpredis via PECL and update your .env file (`REDIS_CLIENT=phpredis`) for a 6x speed boost when using Redis.
 
 ## License
 
@@ -82,26 +71,26 @@ My name is Sebastiaan and I'm a freelance Laravel developer specializing in buil
 
 Have a project that could use some guidance? Send me an e-mail at [hello@sebastiaanluca.com][link-author-email]!
 
-[version-badge]: https://img.shields.io/packagist/v/sebastiaanluca/laravel-preset.svg?label=stable
+[version-badge]: https://img.shields.io/packagist/v/sebastiaanluca/laravel-presets.svg?label=stable
 [license-badge]: https://img.shields.io/badge/license-MIT-informational.svg
-[travis-badge]: https://img.shields.io/travis/sebastiaanluca/laravel-preset/master.svg
-[downloads-badge]: https://img.shields.io/packagist/dt/sebastiaanluca/laravel-preset.svg?color=brightgreen
-[stars-badge]: https://img.shields.io/github/stars/sebastiaanluca/laravel-preset.svg?color=brightgreen
+[travis-badge]: https://img.shields.io/travis/sebastiaanluca/laravel-presets/master.svg
+[downloads-badge]: https://img.shields.io/packagist/dt/sebastiaanluca/laravel-presets.svg?color=brightgreen
+[stars-badge]: https://img.shields.io/github/stars/sebastiaanluca/laravel-presets.svg?color=brightgreen
 
 [blog-link-badge]: https://img.shields.io/badge/link-blog-lightgrey.svg
 [packages-link-badge]: https://img.shields.io/badge/link-other_packages-lightgrey.svg
 [twitter-profile-badge]: https://img.shields.io/twitter/follow/sebastiaanluca.svg?style=social
 [twitter-share-badge]: https://img.shields.io/twitter/url/http/shields.io.svg?style=social
 
-[link-github]: https://github.com/sebastiaanluca/laravel-preset
-[link-packagist]: https://packagist.org/packages/sebastiaanluca/laravel-preset
-[link-travis]: https://travis-ci.org/sebastiaanluca/laravel-preset
+[link-github]: https://github.com/sebastiaanluca/laravel-presets
+[link-packagist]: https://packagist.org/packages/sebastiaanluca/laravel-presets
+[link-travis]: https://travis-ci.org/sebastiaanluca/laravel-presets
 [link-contributors]: ../../contributors
 
 [link-portfolio]: https://www.sebastiaanluca.com
 [link-blog]: https://blog.sebastiaanluca.com
 [link-packages]: https://packagist.org/packages/sebastiaanluca
 [link-twitter]: https://twitter.com/sebastiaanluca
-[link-twitter-share]: https://twitter.com/home?status=https%3A//github.com/sebastiaanluca/laravel-preset%20via%20%40sebastiaanluca
+[link-twitter-share]: https://twitter.com/home?status=https%3A//github.com/sebastiaanluca/laravel-presets%20via%20%40sebastiaanluca
 [link-github-profile]: https://github.com/sebastiaanluca
 [link-author-email]: mailto:hello@sebastiaanluca.com
