@@ -32,6 +32,7 @@ class ApiPreset extends Preset
         $this->command->task('Add environment variables', Closure::fromCallable([$this, 'addEnvironmentVariables']));
         $this->command->task('Add generated OAuth keys', Closure::fromCallable([$this, 'generateAndWriteOauthKeys']));
 
+        $this->command->line('');
         $this->command->info('🎉 API successfully scaffolded!');
         $this->command->info('➡️  After you\'ve reviewed the changes, run `php artisan migrate` to persist the database structure.');
         $this->command->line('');
