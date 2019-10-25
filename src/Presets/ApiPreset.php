@@ -5,6 +5,7 @@ namespace SebastiaanLuca\Preset\Presets;
 use Closure;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
+use RuntimeException;
 use SebastiaanLuca\Preset\Commands\GenerateOauthKeys;
 use function SebastiaanLuca\Preset\handle_filesystem_errors;
 
@@ -33,6 +34,7 @@ class ApiPreset extends Preset
 
         $this->command->info('🎉 API successfully scaffolded!');
         $this->command->info('➡️  After you\'ve reviewed the changes, run `php artisan migrate` to persist the database structure.');
+        $this->command->line('');
         $this->command->comment('Based on your requirements, you can add a migration to create your one-time personal OAuth clients or opt to let your users create these manually themselves in your app.');
         $this->command->comment('See https://laravel.com/docs/passport for more information on how to further configure your API.');
     }
@@ -100,7 +102,7 @@ class ApiPreset extends Preset
 
         $config = str_replace($find, $replace, $config);
 
-        $filesystem->put($path, $config);
+        handle_filesystem_errors($filesystem->put($path, $config));
     }
 
     protected function registerAuthGuard() : void
@@ -121,7 +123,7 @@ class ApiPreset extends Preset
 
         $config = str_replace($find, $replace, $config);
 
-        $filesystem->put($path, $config);
+        handle_filesystem_errors($filesystem->put($path, $config));
     }
 
     protected function registerUserTrait() : void
@@ -157,7 +159,7 @@ class ApiPreset extends Preset
 
         $config = $this->replace($replacements, $config);
 
-        $filesystem->put($path, $config);
+        handle_filesystem_errors($filesystem->put($path, $config));
     }
 
     protected function registerKernelMiddlewares() : void
@@ -232,7 +234,7 @@ class ApiPreset extends Preset
 
         $config = $this->replace($replacements, $config);
 
-        $filesystem->put($path, $config);
+        handle_filesystem_errors($filesystem->put($path, $config));
     }
 
     protected function addEnvironmentVariables() : void
@@ -250,21 +252,30 @@ class ApiPreset extends Preset
         $contents = $filesystem->get($file);
 
         if (! Str::contains($contents, $string)) {
-            $filesystem->put($file, $contents . $string);
+            handle_filesystem_errors($filesystem->put($file, $contents . $string));
         }
     }
 
+    /**
+     * @return void
+     *
+     * @throws \RuntimeException
+     */
     protected function generateAndWriteOauthKeys() : void
     {
-        $this->command->callSilent(GenerateOauthKeys::class, [
+        $returnCodes[] = $this->command->callSilent(GenerateOauthKeys::class, [
             '--write' => true,
             '--file' => '.env',
         ]);
 
-        $this->command->callSilent(GenerateOauthKeys::class, [
+        $returnCodes[] = $this->command->callSilent(GenerateOauthKeys::class, [
             '--write' => true,
             '--file' => '.env.testing',
         ]);
+
+        if (collect($returnCodes)->reject(0)->isNotEmpty()) {
+            throw new RuntimeException('Generating OAuth keys failed.');
+        }
     }
 
     /**
