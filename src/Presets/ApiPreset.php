@@ -32,7 +32,7 @@ class ApiPreset extends Preset
         $this->command->task('Add generated OAuth keys', Closure::fromCallable([$this, 'generateAndWriteOauthKeys']));
 
         $this->command->info('🎉 API successfully scaffolded!');
-        $this->command->info('➡️  After you\'ve reviewed the changes, run `php artisan migrate` to persist them in your database.');
+        $this->command->info('➡️  After you\'ve reviewed the changes, run `php artisan migrate` to persist the database structure.');
         $this->command->comment('Based on your requirements, you can add a migration to create your one-time personal OAuth clients or opt to let your users create these manually themselves in your app.');
         $this->command->comment('See https://laravel.com/docs/passport for more information on how to further configure your API.');
     }
